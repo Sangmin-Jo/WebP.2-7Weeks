@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Make your Clock</title>
+	<style type="text/css">
+	body{margin: 20px; padding-top: 40px;
+		-ms-overflow-style: none;}
+	::-webkit-scrollbar {display: none;}
+
+	div{font-family: helvetica}
+
+	button{font-size: 2rem; padding: 20px ;background: #dcdcdc;}
+	button:hover{background: black; color: #dcdcdc;}
+
+	#clock, #date, #weather{width: 600px; height: 600px; border-radius: 50%;	
+		background: whitesmoke; border: 8px solid black;
+		position: relative;
+		z-index: -1;
+		margin: auto; margin: 10px;
+	}
+
+	#rightFixed{position: fixed; z-index: 1;
+	  right: 20px;
+	  top: 20px;}
+
+
+/*clock contents*/
+
+	.niddle{z-index: 1;}
+	#niddleHour{width: 10px; height: calc(30% - 4px); background: black;
+		top: calc(20% + 4px); left: calc(50% - 5px);
+		position: absolute; transform-origin: bottom;
+	}
+	#niddleMin{width: 6px; height: calc(50% - 4px); background: black;
+		top: 4px; left: calc(50% - 3px);
+		position: absolute; transform-origin: bottom;
+	}
+	#niddleSec{width: 4px; height: calc(50% - 4px); background: red;
+		top: 4px; left: calc(50% - 2px);
+		position: absolute; transform-origin: bottom;
+	}
+	.timeNum{
+		font-size: 6rem; letter-spacing: -8px;
+		position: absolute;
+		z-index: 0;
+	}
+	.time3{height: 100%;vertical-align: middle; right: 30px; display: flex; align-items: center;}
+	.time6{width: 100%; text-align: center; bottom: 8px}
+	.time9{height: 100%; vertical-align: middle; left: 20px; display: flex; align-items: center;}
+	.time12{width: 100%; text-align: center; top: 7px;}
+
+/*date contents*/
+	#datePrint{position: absolute; width: 100%; text-align: center;
+		padding-top: 250px;
+		font-size: 3rem; line-height: 1.3em; font-weight: 500;}
+
+/*weather contents*/
+	#weatherPrint{position: absolute; width: 100%; text-align: center;
+		padding-top: 60px;
+		font-size: 2.3rem; line-height: 1.3em; font-weight: 500;}
+
+	#clockSign{font-family: 'Tangerine', cursive; font-size: 1.5rem; position: absolute; z-index: -1;
+		width: 100%; top: calc(60% + 8px);
+		text-align: center;}
+
+
+
+/* The Modal */
+	#myBtn{position: fixed;
+		left: 20px;
+		top: 20px;
+	}
+	.modal {
+	  display: none; /* Hidden by default */
+	  position: fixed; /* Stay in place */
+	  z-index: 1; /* Sit on top */
+	  padding-top:;/* Location of the box */
+	  left: 0;
+	  top: 0;
+	  width: 100%; /* Full width */
+	  height: 100%; /* Full height */
+	  overflow: auto; /* Enable scroll if needed */
+	}
+
+	/* Modal Content */
+	.modal-content {
+	  background-color: #dcdcdc;
+	  margin: 20px;
+	  padding: 20px;
+	  border: 2px solid black;
+	  width: 300px;
+	  font-family: helvetica; letter-spacing: -0.2px;
+	  font-size: 1rem; color: black;
+	}
+
+	/* The Close Button */
+	.close {
+	  color: black;
+	  float: right;
+	  font-size: 28px;
+	  font-weight: bold;
+	}
+
+	.close:hover,
+	.close:focus {
+	  color: #000;
+	  text-decoration: none;
+	  cursor: pointer;
+	}
+
+	input{-webkit-appearance: none; width: 50%; box-sizing: border-box;
+		display: inline-block;
+	}
+	input[type="color"]{border: 1px solid grey; border-radius: 0; background: none; height: 30px;}
+  	input[type="range"]{border: 0px; height: 1px; background: grey;   
+  		border-width: 1px 0px;}
+  	input[type="range"]::-webkit-slider-thumb {
+	  -webkit-appearance: none; appearance: none; 
+	  /* creating a custom design */
+	  height: 40px;
+	  width: 20px;
+	  background-color: grey;
+	  border-radius: 0;
+	  border: 1px solid black;
+	}
+	input[type="text"]{padding: 4px 6px; background-color: lightgrey; border-radius: 0; border: 2px solid black; color: black}
+	.col2{margin: 24px 0px; vertical-align: top;}
+	p{margin: 0; padding: 0; display: inline-block; width: 40%;}
+
+
+
+
+</style>
+</head>
+
+<body>
+
+	<button id="myBtn">Custom</button>
+	<div id="controller" class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<p style="font-size: 2rem;">Custom</p>
+			<div class="col2">
+				<p>Clock color</p>
+				<input type="color" id="bgColor" class="inputCol">
+			</div>
+			<div class="col2">
+				<p>Niddle color</p>
+				<input type="color" id="niddleColor" class="inputCol">
+			</div>
+			<div class="col2">
+				<p>Text color</p>
+				<input type="color" id="textColor" class="inputCol">
+			</div>
+			<div class="col2">
+				<p>Clock size</p>
+				<input type="range" id="clockScale" min="200" max="1000" value="600">
+			</div>
+			<div class="col2">
+				<p>clock radius</p>
+				<input type="range" id="clockRadius" min="0" max="50" value="50">
+			</div>
+			<div class="col2">
+				<p>signiture</p>
+				<input type="text" id="signiture">
+			</div>
+			
+		</div></div>
+
+	<div id="rightFixed">
+		
+		<button id="clockBtn">Time</button>
+		<button id="dateBtn">Date</button>
+		<button id="weatherBtn">Weather</button>
+			<br>
+		<div style="font-size: 1rem; font-family: 'helvetica'; text-align: right; margin-top: 10px;">Location: Seoul
+		</div>
+	</div>
+
+	<div>
+		<div id="clock">
+			<div id=clock-content>
+				<div id="niddleHour" class="niddle"></div>
+				<div id="niddleMin" class="niddle"></div>
+				<div id="niddleSec" class="niddle"></div>
+				<div class="timeNum time3"><div>3</div></div>
+				<div class="timeNum time6">6</div>
+				<div class="timeNum time9"><div>9</div></div>
+				<div class="timeNum time12">12</div>
+				<div id="clockSign"></div>
+			</div>
+		</div>
+		<div id="date">
+			<div id="datePrint"></div>
+		</div>
+		<div id="weather">
+			<div id="weatherPrint"></div>
+		</div>
+	</div>
+
+<script type="text/javascript">
+
+// 날짜시간 표시
+	var DateTimer = setInterval(makeDate,100);
+	function makeDate(){
+		var d = new Date();
+
+		var year = d.getFullYear();
+		var month = d.getMonth();
+		var date = d.getDate();
+		var hour = d.getHours();
+		var minute = d.getMinutes();
+		var second = d.getSeconds();
+
+		datePrint.innerHTML = dateTrans(date) + monthTrans(month) + " " + year + ", " + "<br>" + hour + " : " + minute + " : " + second;
+	}
+	function dateTrans(num){
+		if(num == 1){return "1st "} else
+		if(num == 2){return "2nd "} else
+		if(num == 3){return "3rd "} else
+		if(num > 3){return num + "st "}
+	}
+	function monthTrans(num){
+		if(num == 1){num2 = "January"}
+		if(num == 2){num2 = "February"}
+		if(num == 3){num2 = "March"}
+		if(num == 4){num2 = "April"}
+		if(num == 5){num2 = "May"}
+		if(num == 6){num2 = "June"}
+		if(num == 7){num2 = "July"}
+		if(num == 8){num2 = "August"}
+		if(num == 9){num2 = "September"}
+		if(num == 10){num2 = "October"}
+		if(num == 11){num2 = "November"}
+		if(num == 12){num2 = "December"}
+		return num2
+	}
+
+// 시계 바늘 각도 지정
+	setInterval(rotateNeedles , 50);
+
+	function rotateNeedles(){
+		const now = new Date();
+    
+		const h = now.getHours();  // (0~23)
+		const m = now.getMinutes();  // (0~59)
+		const s = now.getSeconds();  // (0~59)
+	    
+		const degHour = (h * 360 / 12) + (m * 360 / 12 / 60);
+		const degMin = (m * 360 / 60);
+		const degSec = (s * 360 / 60);
+    
+    	document.getElementById("niddleHour").style.transform = `rotate(${degHour}deg)`
+    	document.getElementById("niddleMin").style.transform = `rotate(${degMin}deg)`
+    	document.getElementById("niddleSec").style.transform = `rotate(${degSec}deg)`
+	}
+
+// Modal
+	var modal = document.getElementById("controller");
+	var btn = document.getElementById("myBtn");
+	var span = document.getElementsByClassName("close")[0];
+
+	btn.onclick = function() {
+	  modal.style.display = "block";
+	}
+	span.onclick = function() {
+	  modal.style.display = "none";
+	}
+	window.onclick = function(event) {
+	  if (event.target == modal) {
+	    modal.style.display = "none";
+	  }
+	}
+
+// Controll pannel
+	bgColor.oninput = function(){
+		clock.style.background = bgColor.value;
+		date.style.background = bgColor.value;
+	}
+	niddleColor.oninput = function(){
+		niddleSec.style.background = niddleColor.value;
+	}	
+	textColor.oninput = function(){
+		 var timeNums = document.querySelectorAll(".timeNum");
+	    for (var i = 0; i < timeNums.length; i++) {
+	        timeNums[i].style.color = textColor.value;
+	    }
+	    clock.style.borderColor = textColor.value;
+	    date.style.borderColor = bgColor.value;
+	}
+	clockScale.oninput = function(){
+		clock.style.width = clockScale.value + "px";
+		clock.style.height = clockScale.value + "px";
+	}
+	clockRadius.oninput = function () {
+	    var clockElement = document.getElementById('clock');
+	    var dateElement = document.getElementById('date');
+	    clockElement.style.borderRadius = clockRadius.value + "%";
+	    dateElement.style.borderRadius = clockRadius.value + "%";
+	}
+	signiture.oninput = function () {
+	    clockSign.innerHTML = signiture.value;
+	}
+
+// weather
+	const getJSON = function(url, callback) {
+	  const xhr = new XMLHttpRequest();
+	  xhr.open('GET', url, true);
+	  xhr.responseType = 'json';
+	  xhr.onload = function() {
+	    const status = xhr.status;
+	    if(status === 200) {
+	      callback(null, xhr.response);
+	    } else {
+	      callback(status, xhr.response);
+	    }
+	  };
+	  xhr.send();
+	};
+
+  getJSON('https://api.openweathermap.org/data/2.5/weather?q=seoul&appid=340642526e19fa51d995edfd197ce21c&units=metric&',
+  function(err, data) {
+    if(err !== null) {
+      alert('예상치 못한 오류 발생.' + err);
+    } else {
+      document.getElementById("weatherPrint").innerHTML = `${data.weather[0].description} <br><br>
+        Temperature - ${data.main.temp}° <br>
+        Wind speed - ${data.wind.speed}m/s <br>
+        Humidity - ${data.main.humidity}% <br><br>
+        today's <br>
+        Max.temperature - ${data.main.temp_max}° <br>
+        Min.temperature - ${data.main.temp_min}° <br>
+        `;
+      
+     }
+
+     
+
+  });
+
+// 🌞&#127774;
+// 🌤&#127780;
+// ⛅&#127781;
+// ☁
+// 🌦&#127782;
+// 🌧&#127783;
+// ⛈
+// 🌩&#127785;
+// 🌨&#127784;
+// 🌫&#127787;
+
+// Btn
+	var clock = document.getElementById("clock");
+	var date = document.getElementById("date");
+	var weather = document.getElementById("weather");
+	var clockbtn = document.getElementById("clockBtn");
+	var datebtn = document.getElementById("dateBtn");
+	var weatherbtn = document.getElementById("weatherBtn");
+
+	clock.style.display = "none"
+	date.style.display = "none"
+	weather.style.display = "none"
+
+	clockbtn.onclick = function () {
+		if (clock.style.display === "none") {
+			clock.style.display = "inline-block";
+			clockbtn.style.backgroundColor = "black";
+			clockbtn.style.color = "#dcdcdc";
+		} else if (clock.style.display === "inline-block") {
+			clock.style.display = "none";
+			clockbtn.style.backgroundColor = "";
+			clockbtn.style.color = "";
+		}
+	}
+	datebtn.onclick = function () {
+		if (date.style.display === "none") {
+			date.style.display = "inline-block";
+			datebtn.style.backgroundColor = "black";
+			datebtn.style.color = "#dcdcdc";
+		} else if (date.style.display === "inline-block") {
+			date.style.display = "none";
+			datebtn.style.backgroundColor = "";
+			datebtn.style.color = "";
+		}
+	}
+	weatherbtn.onclick = function () {
+		if (weather.style.display === "none") {
+			weather.style.display = "inline-block";
+			weatherbtn.style.backgroundColor = "black";
+			weatherbtn.style.color = "#dcdcdc";
+		} else if (weather.style.display === "inline-block") {
+			weather.style.display = "none";
+			weatherbtn.style.backgroundColor = "";
+			weatherbtn.style.color = "";
+		}
+	}
+	
+
+
+
+</script>
+</body>
+</html>
